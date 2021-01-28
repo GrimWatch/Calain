@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.scrolledtext as st
-from tkinter import Label, PhotoImage, Text, Toplevel, messagebox
+from tkinter import Canvas, Label, PhotoImage, Text, Toplevel, messagebox
+from PIL import Image
 import tkcalendar as cal
 import pickle
 import time
@@ -10,6 +11,7 @@ import webbrowser
 #global variable
 newWindow=1
 text_box=1
+anim = None
 
 # style
 g="#282a2b"
@@ -25,10 +27,8 @@ root.title("Layer 0")
 root.configure(bg=g)
 root.resizable(False, False)
 
-
 # calendar
 today = datetime.date.today()
-
 CALENDAR = cal.Calendar(root,disabledforeground='red',selectmode="day",showweeknumbers=0,showothermonthdays=0,
                         normalbackground=g,headersbackground=g,foreground=w,normalforeground=w,weekendbackground=g,
                         weekendforeground=w,background=g,bordercolor=g,headersforeground=w,selectbackground=lg)
@@ -114,14 +114,11 @@ def NewWindow():
     text_box = st.ScrolledText(newWindow,width=60,height=9,wrap='word',bg=g,fg=w,insertbackground=w)
     text_box.grid(row=1,column=0,columnspan=3)
     interval.pop(0)
-
     #existing event
     for e in date_event_dict:
         if e == date_gotten: 
             t=date_event_dict[e]
             text_box.insert(0.0,t)
-
-
     #buttons
     confirm = tk.Button(newWindow,text='Confirm',bg=g,fg=w, command=set_event)
     confirm.grid(row=2,column=0)
@@ -136,7 +133,6 @@ def NewWindow():
 
 #double click
 interval=[]
-
 def doubleclick(event):
     global interval
     time_interval=time.perf_counter()
@@ -155,18 +151,40 @@ CALENDAR.bind("<<CalendarSelected>>", doubleclick)
 
 def about():
     about = Toplevel() 
-    about.geometry("500x190")
+    about.geometry("500x230")
     about.resizable(False, False)
     about.iconbitmap(r"Materials\navi.ico")
     about.configure(bg=g)
-    Label(about,text ="About",bg=g,fg=w,font=20).grid(row=0,column=1,columnspan=3)
+    Label(about,text ="About",bg=g,fg=w,font=20).grid(row=0,column=2)
     Label(about,text="Version 2.7",bg=g,fg=w).grid(row=1,column=2)
-    Label(about,text="\nMade by GrimWatch \nPossible New updates at GitHUB              \nlink to GitHUb page",bg=g,fg=w,anchor="w",justify="left").grid(row=2,column=0)
+    Label(about,text="\n\n\nMade by GrimWatch \nPossible New updates at GitHUB              \nlink to GitHUb page",bg=g,fg=w,anchor="w",justify="left").grid(row=2,column=0)
     link1=Label(about,text="https://github.com/GrimWatch/Layer-0",bg=g,justify="left",fg="#add8e6",cursor="hand2")
+    #link
     def openlink(event):
         webbrowser.open_new("https://github.com/GrimWatch/Layer-0")
     link1.bind("<Button-1>",openlink)
     link1.grid(row=3,column=0)
+    #images
+    image=PhotoImage(file="Materials\github.png").subsample(3,3)
+    Label(about, image=image,bg=g).grid(row=4,column=0)
+    file="Materials\wired.gif"
+    info = Image.open(file)
+    frames = info.n_frames  # gives total number of frames that gif contains
+    # creating list of PhotoImage objects for each frames
+    im = [tk.PhotoImage(file=file,format=f"gif -index {i}") for i in range(frames)]
+    count = 0
+    def animation(count):
+        global anim
+        im2 = im[count]
+        gif_label.configure(image=im2,bg=g)
+        count += 1
+        if count == frames:
+            count = 0
+        anim = root.after(50,lambda :animation(count))
+
+    gif_label = tk.Label(about,image="")
+    gif_label.grid(row=2,column=3,rowspan=3)
+    animation(count)
 
     about.transient(root)
     about.grab_set()
