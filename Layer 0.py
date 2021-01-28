@@ -177,5 +177,5 @@ def about():
 photo=PhotoImage(file=r"lain.png").subsample(4,4)
 lain = tk.Button(root,image=photo,bg=g,activebackground=g,command=about).pack(side='right')
 
-
+print(test)
 root.mainloop()
