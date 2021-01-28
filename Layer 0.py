@@ -19,7 +19,7 @@ r="#bf4040"
 
 # window setup
 root = tk.Tk()
-root.iconbitmap("navi.ico")
+root.iconbitmap(r"Materials\navi.ico")
 root.geometry("600x550")
 root.title("Layer 0")
 root.configure(bg=g)
@@ -37,14 +37,14 @@ CALENDAR.pack(fill="both", expand=True)
 # dates
 event_date=[]
 try:
-    event_date = pickle.load(open("dates.dat","rb"))
+    event_date = pickle.load(open("Data\dates.dat","rb"))
 except EOFError:
     pass
 
 #date_events
 date_event_dict={}
 try:
-    date_event_dict = pickle.load(open("save.dat","rb"))
+    date_event_dict = pickle.load(open("Data\save.dat","rb"))
 except EOFError:
     pass
 
@@ -69,11 +69,11 @@ def set_event():
             event_date.append(date_gotten)
             messagebox.showinfo("Layer 0","Event added successfully")
             #saving
-            ev_date = open("dates.dat","wb")
+            ev_date = open("Data\dates.dat","wb")
             pickle.dump(event_date,ev_date)
             ev_date.close()
             date_event_dict.update({date_gotten:t})
-            to_save = open('save.dat','wb')
+            to_save = open('Data\save.dat','wb')
             pickle.dump(date_event_dict,to_save)
             to_save.close()
         newWindow.destroy()
@@ -92,10 +92,10 @@ def delete_event():
         date_event_dict.pop(date_gotten)
         event_date.remove(date_gotten)
         #saving
-        to_save = open('save.dat','wb')
+        to_save = open('Data\save.dat','wb')
         pickle.dump(date_event_dict,to_save)
         to_save.close()
-        ev_date = open("dates.dat","wb")
+        ev_date = open("Data\dates.dat","wb")
         pickle.dump(event_date,ev_date)
         ev_date.close()
         newWindow.destroy()
@@ -106,11 +106,12 @@ def NewWindow():
     global text_box
     newWindow = Toplevel() 
     newWindow.geometry("500x190")
+    newWindow.configure(bg=g)
     newWindow.resizable(False, False)
-    newWindow.iconbitmap("navi.ico")
+    newWindow.iconbitmap(r"Materials\navi.ico")
     date_gotten = CALENDAR.selection_get()
-    Label(newWindow,text =date_gotten).grid(row=0,column=1)
-    text_box = st.ScrolledText(newWindow,width=60,height=9,wrap='word')
+    Label(newWindow,text =date_gotten,bg=g,fg=w).grid(row=0,column=1)
+    text_box = st.ScrolledText(newWindow,width=60,height=9,wrap='word',bg=g,fg=w,insertbackground=w)
     text_box.grid(row=1,column=0,columnspan=3)
     interval.pop(0)
 
@@ -122,9 +123,9 @@ def NewWindow():
 
 
     #buttons
-    confirm = tk.Button(newWindow,text='Confirm', command=set_event)
+    confirm = tk.Button(newWindow,text='Confirm',bg=g,fg=w, command=set_event)
     confirm.grid(row=2,column=0)
-    delete = tk.Button(newWindow,text='Delete Event',command=delete_event)
+    delete = tk.Button(newWindow,text='Delete Event',bg=g,fg=w,command=delete_event)
     delete.grid(row=2,column=2)
 
     newWindow.transient(root)
@@ -156,7 +157,7 @@ def about():
     about = Toplevel() 
     about.geometry("500x190")
     about.resizable(False, False)
-    about.iconbitmap("navi.ico")
+    about.iconbitmap(r"Materials\navi.ico")
     about.configure(bg=g)
     Label(about,text ="About",bg=g,fg=w,font=20).grid(row=0,column=1,columnspan=3)
     Label(about,text="Version 2.7",bg=g,fg=w).grid(row=1,column=2)
@@ -174,8 +175,7 @@ def about():
     about.mainloop
 
 #buttons
-photo=PhotoImage(file=r"lain.png").subsample(4,4)
+photo=PhotoImage(file=r"Materials\lain.png").subsample(4,4)
 lain = tk.Button(root,image=photo,bg=g,activebackground=g,command=about).pack(side='right')
 
-print(test)
 root.mainloop()
