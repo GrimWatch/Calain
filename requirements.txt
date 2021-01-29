@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 tkinter
 tkcalendar
 PIL(pillow)
 
+=======
+tkinter
+tkcalendar
+PIL(pillow)
+>>>>>>> ebaf6f433067356f2f44bb7dbc86d1bb59c81a65
