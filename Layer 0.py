@@ -119,6 +119,11 @@ def NewWindow():
         if e == date_gotten: 
             t=date_event_dict[e]
             text_box.insert(0.0,t)
+    #closing window
+    def on_closing():
+        if messagebox.askokcancel("Quit", "         Do you want to quit?\nany unsaved changes will be lost"):
+            newWindow.destroy()
+    newWindow.protocol("WM_DELETE_WINDOW", on_closing)
     #buttons
     confirm = tk.Button(newWindow,text='Confirm',bg=g,fg=w, command=set_event)
     confirm.grid(row=2,column=0)
