@@ -9,8 +9,8 @@ import datetime
 import webbrowser
 
 #global variable
-newWindow=1
-text_box=1
+newWindow=None
+text_box=None
 anim = None
 
 # style
@@ -28,7 +28,6 @@ root.configure(bg=g)
 root.resizable(False, False)
 
 # calendar
-today = datetime.date.today()
 CALENDAR = cal.Calendar(root,disabledforeground='red',selectmode="day",showweeknumbers=0,showothermonthdays=0,
                         normalbackground=g,headersbackground=g,foreground=w,normalforeground=w,weekendbackground=g,
                         weekendforeground=w,background=g,bordercolor=g,headersforeground=w,selectbackground=lg)
@@ -86,7 +85,6 @@ def delete_event():
     if date_gotten not in event_date:
         messagebox.showerror("Layer 0","Event does not exist")
     else:
-        messagebox.showinfo("Layer 0","Event Deleted")
         CALENDAR.tag_config(str(date_gotten),background=g, foreground=w)
         text_box.delete("0.0","end")
         date_event_dict.pop(date_gotten)
@@ -98,6 +96,7 @@ def delete_event():
         ev_date = open("Data\dates.dat","wb")
         pickle.dump(event_date,ev_date)
         ev_date.close()
+        messagebox.showinfo("Layer 0","Event Deleted")
         newWindow.destroy()
 
 # new window
@@ -121,7 +120,7 @@ def NewWindow():
             text_box.insert(0.0,t)
     #closing window
     def on_closing():
-        if messagebox.askokcancel("Quit", "         Do you want to quit?\nany unsaved changes will be lost"):
+        if messagebox.askokcancel("Quit", "         Do you want to quit?\nall unsaved changes will be lost"):
             newWindow.destroy()
     newWindow.protocol("WM_DELETE_WINDOW", on_closing)
     #buttons
