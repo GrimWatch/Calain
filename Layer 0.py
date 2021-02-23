@@ -120,7 +120,11 @@ def NewWindow():
             text_box.insert(0.0,t)
     #closing window
     def on_closing():
-        if messagebox.askokcancel("Quit", "         Do you want to quit?\nall unsaved changes will be lost"):
+        t = text_box.get('1.0','end-1c')
+        if t != "":
+            if messagebox.askokcancel("Quit", "         Do you want to quit?\nall unsaved changes will be lost"):
+                newWindow.destroy()
+        else:
             newWindow.destroy()
     newWindow.protocol("WM_DELETE_WINDOW", on_closing)
     #buttons
