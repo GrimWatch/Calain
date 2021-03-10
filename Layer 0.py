@@ -153,9 +153,7 @@ def doubleclick(event):
     global interval
     time_interval=time.perf_counter()
     interval.append(time_interval)
-    if len(interval)!=2:
-        pass
-    elif len(interval)==2:
+    if len(interval)==2:
         if interval[1]-interval[0]<0.2:
             NewWindow()
         try:
