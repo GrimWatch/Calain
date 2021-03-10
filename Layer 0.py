@@ -11,7 +11,7 @@ import webbrowser
 #global variable
 newWindow=None
 text_box=None
-anim = None
+anim = []
 
 # style
 g="#282a2b"
@@ -47,6 +47,26 @@ try:
 except EOFError:
     pass
 
+#saving
+def saving():
+    to_save = open('Data\save.dat','wb')
+    pickle.dump(date_event_dict,to_save)
+    to_save.close()
+    ev_date = open("Data\dates.dat","wb")
+    pickle.dump(event_date,ev_date)
+    ev_date.close()
+
+#deleting past events
+date_gotten = CALENDAR.selection_get()
+for ii in event_date:
+    if date_gotten > ii:
+        anim.append(ii)
+for jj in anim:
+    date_event_dict.pop(jj)
+    event_date.remove(jj)
+    #saving
+    saving()
+
 # load text
 for j in event_date:
     CALENDAR.calevent_create(j,'reminder2',str(j))
@@ -68,13 +88,10 @@ def set_event():
             event_date.append(date_gotten)
             messagebox.showinfo("Layer 0","Event added successfully")
             #saving
-            ev_date = open("Data\dates.dat","wb")
-            pickle.dump(event_date,ev_date)
-            ev_date.close()
             date_event_dict.update({date_gotten:t})
-            to_save = open('Data\save.dat','wb')
-            pickle.dump(date_event_dict,to_save)
-            to_save.close()
+            saving()
+
+
         newWindow.destroy()
 
 # delete date
@@ -90,12 +107,7 @@ def delete_event():
         date_event_dict.pop(date_gotten)
         event_date.remove(date_gotten)
         #saving
-        to_save = open('Data\save.dat','wb')
-        pickle.dump(date_event_dict,to_save)
-        to_save.close()
-        ev_date = open("Data\dates.dat","wb")
-        pickle.dump(event_date,ev_date)
-        ev_date.close()
+        saving()
         messagebox.showinfo("Layer 0","Event Deleted")
         newWindow.destroy()
 
@@ -120,12 +132,9 @@ def NewWindow():
             text_box.insert(0.0,t)
     #closing window
     def on_closing():
-        t = text_box.get('1.0','end-1c')
-        if t != "":
-            if messagebox.askokcancel("Quit", "         Do you want to quit?\nall unsaved changes will be lost"):
-                newWindow.destroy()
-        else:
+        if messagebox.askokcancel("Quit", "         Do you want to quit?\nall unsaved changes will be lost"):
             newWindow.destroy()
+  
     newWindow.protocol("WM_DELETE_WINDOW", on_closing)
     #buttons
     confirm = tk.Button(newWindow,text='Confirm',bg=g,fg=w, command=set_event)
@@ -164,7 +173,7 @@ def about():
     about.iconbitmap(r"Materials\navi.ico")
     about.configure(bg=g)
     Label(about,text ="About",bg=g,fg=w,font=20).grid(row=0,column=2)
-    Label(about,text="Version 2.7",bg=g,fg=w).grid(row=1,column=2)
+    Label(about,text="Version 2.8",bg=g,fg=w).grid(row=1,column=2)
     Label(about,text="\n\n\nMade by GrimWatch \nPossible New updates at GitHUB              \nlink to GitHUb page",bg=g,fg=w,anchor="w",justify="left").grid(row=2,column=0)
     link1=Label(about,text="https://github.com/GrimWatch/Layer-0",bg=g,justify="left",fg="#add8e6",cursor="hand2")
     #link
