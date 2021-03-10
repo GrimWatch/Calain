@@ -5,7 +5,6 @@ from PIL import Image
 import tkcalendar as cal
 import pickle
 import time
-import datetime
 import webbrowser
 
 #global variable
